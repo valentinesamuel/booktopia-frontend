@@ -1,0 +1,64 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo -e '
+🤦‍♂️🤦‍♂️\033[1mStyling and building your project before committing\033[0m🤦‍♂️🤦‍♂️
+'
+
+# Format Prettier
+npm run prettier-formatter ||
+{
+    echo -e '
+    🚩🚩\033[31mPrettier Formatting Failed\033[0m🚩🚩. 
+    Run 🤦‍♂️🤦‍♂️\033[1;34m==> npm run prettier-formatter<==\033[0m, add changes and try commiting again🤦‍♂️🤦‍♂️
+    ';
+    false;
+}
+
+# Check Prettier
+npm run prettier-checker ||
+{
+    echo -e '
+    🚩🚩\033[31mPrettier Check Failed\033[0m🚩🚩. 
+    🤦‍♂️🤦‍♂️\033[1;34mCorrect the errors, add changes and try commiting again\033[0m🤦‍♂️🤦‍♂️
+    ';
+    false;
+}
+
+# Check EsLint
+npm run lint ||
+{
+    echo -e '
+    🚩🚩\033[31mESLint Check Failed\033[0m🚩🚩. 
+    🤦‍♂️🤦‍♂️\033[1;34mMake the required changes listed above, add changes and try commiting again\033[0m🤦‍♂️🤦‍♂️
+    ';
+    false;
+} && {
+    echo -e '
+    🚩🚩\033[31mThere were errors with your linting\033[0m🚩🚩. 
+    🤦‍♂️🤦‍♂️\033[1;33mPlease hang on while i try to fix the linting issues\033[0m🤦‍♂️🤦‍♂️
+    ';
+    false;
+} || npm run lint:fix && echo -e '
+😁😁\e[32mPhew.. I finally fixed it\e[0m😁😁
+'
+
+
+
+# Build
+npm run build ||
+{
+    echo -e '
+    🚩🚩\033[31mYour build process failed\033[0m. \033[1;34mAttend to the errors above\033[0m🚩🚩
+    ';
+    false;
+}
+
+# Successful comitting
+echo -e '
+🚀🚀🚀Commit Success🚀🚀🚀
+🚀🚀🚀Commit Success🚀🚀🚀
+🚀🚀🚀Commit Success🚀🚀🚀
+🚀🚀🚀Commit Success🚀🚀🚀
+🚀🚀🚀Commit Success🚀🚀🚀
+'
